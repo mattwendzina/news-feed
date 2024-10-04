@@ -1,0 +1,17 @@
+.postComposer__form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.postComposerForm__text-area {
+  width: 100%; /* This will make the textarea adjust to the width of its parent */
+  padding: 0.5rem;
+  min-height: 100px; /* Set a minimum height */
+  resize: vertical; /* Allow users to manually resize the height if needed */
+}
+
+.postComposerForm__submit-button {
+  width: max-content;
+  padding: 0.5rem;
+}
