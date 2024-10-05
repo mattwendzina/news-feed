@@ -7,23 +7,23 @@ export interface PostProps {
 }
 
 export default function Post({ post }: PostProps) {
-  const { user, content, timestamp } = post || {};
+  const { author, content, created_time } = post || {};
   const [clientTime, setClientTime] = useState<string | null>(null);
 
   useEffect(() => {
     // This will run on the client after hydration
-    if (timestamp) {
-      setClientTime(new Date(timestamp).toLocaleString("en-GB"));
+    if (created_time) {
+      setClientTime(new Date(created_time).toLocaleString("en-GB"));
     }
-  }, [timestamp]);
+  }, [created_time]);
 
-  if (!user || !content || !timestamp) {
+  if (!author?.name || !content || !created_time) {
     return null;
   }
 
   return (
     <div className="post">
-      <h3>{user}</h3>
+      <h3>{author.name}</h3>
       <p>{content}</p>
       <small>
         {/* Conditionally render the timestamp after hydration */}

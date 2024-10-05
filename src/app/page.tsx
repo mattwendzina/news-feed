@@ -1,15 +1,22 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./page.module.css";
 import Feed from "./components/Feed";
 import { Post } from "@/types";
 import { PostComposer } from "./components/PostComposer";
 
 export default function Home() {
-  const [posts, setPosts] = useState<Post[]>([
-    { content: "Hello, world!", timestamp: Date.now(), user: "Matt" },
-    { content: "Hi, there!", timestamp: Date.now(), user: "Jon" },
-  ]);
+  const [posts, setPosts] = useState<Post[]>([]);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      const response = await fetch("/api/posts");
+      const data = await response.json();
+      setPosts(data);
+    };
+
+    fetchPosts();
+  }, []);
 
   const createPostHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -18,8 +25,8 @@ export default function Home() {
 
     const newPost: Post = {
       content: postContent,
-      timestamp: Date.now(),
-      user: "Matt",
+      created_time: Date.now(),
+      author: { name: "Jon" },
     };
 
     setPosts((prevPosts) => [newPost, ...prevPosts]);
