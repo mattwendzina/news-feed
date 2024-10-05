@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import type { Post as PostType } from "@/types";
 import { useEffect, useState } from "react";

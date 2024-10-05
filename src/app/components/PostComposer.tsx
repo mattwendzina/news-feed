@@ -1,7 +1,8 @@
 import React from "react";
 import styles from "./postComposer.module.css";
 interface PostComposerProps {
-  createPost: (event: React.FormEvent<HTMLFormElement>) => void;
+  // TODO - remove the optional modifier from createPost
+  createPost?: (event: React.FormEvent<HTMLFormElement>) => void;
 }
 
 export const PostComposer = ({ createPost }: PostComposerProps) => {
