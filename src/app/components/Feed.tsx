@@ -1,3 +1,4 @@
+import React from "react";
 import { Post as PostType } from "@/types";
 import Post from "./Post";
 
