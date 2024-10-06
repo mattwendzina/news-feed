@@ -1,9 +1,9 @@
 "use client";
-import React, { useEffect, useState, useReducer } from "react";
-import { NormalizedPost, Post as PostType, User } from "@/types";
+import React, { useEffect, useState } from "react";
+import { Post as PostType, User } from "@/types";
 import Post from "./Post";
 import ErrorFallback from "./ErrorFallback";
-import { initialState, reducer } from "../store/store";
+import { useStore } from "../store/storeContext";
 
 interface FeedProps {
   error: string | null;
@@ -12,15 +12,13 @@ interface FeedProps {
 }
 
 export default function Feed({ error, posts, users }: FeedProps) {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const { state } = useStore();
   const [isHydrated, setIsHydrated] = useState<boolean>(false);
   if (error) {
     return <ErrorFallback message={error} />;
   }
 
   useEffect(() => {
-    dispatch({ payload: posts, type: "SET_POSTS" });
-    dispatch({ payload: users, type: "SET_USERS" });
     setIsHydrated(true);
   }, []);
 

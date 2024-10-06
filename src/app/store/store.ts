@@ -12,17 +12,19 @@ export const initialState: NormalizedState = {
 
 const SET_POSTS = "SET_POSTS";
 const SET_USERS = "SET_USERS";
+const ADD_POST = "ADD_POST";
 
-type Action =
+export type Action =
   | { type: "SET_POSTS"; payload: Post[] }
-  | { type: "SET_USERS"; payload: User[] };
+  | { type: "SET_USERS"; payload: User[] }
+  | { type: "ADD_POST"; payload: Post };
 
 export function reducer(
   state: NormalizedState,
   action: Action
 ): NormalizedState {
-  const newPosts: Record<string, NormalizedPost> = { ...state.posts };
-  const newUsers = { ...state.users };
+  const posts: Record<string, NormalizedPost> = { ...state.posts };
+  const users = { ...state.users };
 
   switch (action.type) {
     case SET_POSTS:
@@ -30,11 +32,11 @@ export function reducer(
         const { author, ...restOfPost } = post;
         if (author && author.id) {
           // Add the author to the users slice
-          newUsers[author.id] = author;
+          users[author.id] = author;
         }
 
         // Create a new post object with authorId instead of author object
-        newPosts[post.id as string] = {
+        posts[post.id as string] = {
           ...restOfPost,
           authorId: post.author?.id as string, // Replace author with authorId
         };
@@ -42,17 +44,29 @@ export function reducer(
 
       return {
         ...state,
-        posts: newPosts,
-        users: newUsers,
+        posts: posts,
+        users: users,
       };
     case SET_USERS:
       action.payload.forEach((user) => {
-        newUsers[user.id as string] = user;
+        users[user.id as string] = user;
       });
       return {
         ...state,
-        users: newUsers,
+        users: users,
       };
+    case ADD_POST:
+      const { author, ...restOfPost } = action.payload;
+      if (author && author.id) {
+        users[author.id] = author;
+      }
+      posts[action.payload.id as string] = {
+        ...restOfPost,
+        authorId: author?.id,
+      };
+      const newState = { ...state, posts: posts, users: users };
+
+      return newState;
     default:
       return state;
   }

@@ -1,7 +1,7 @@
 import styles from "./page.module.css";
-import Feed from "./components/Feed";
 import { Post, User } from "@/types";
-import { PostComposer } from "./components/PostComposer";
+import { HomeWithClientState } from "./HomeWithClientState";
+import { StoreProvider } from "./store/storeContext";
 
 const apiUrl = `${
   process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"
@@ -30,12 +30,10 @@ export default async function Home() {
   const users = await fetchUsers();
 
   return (
-    <div className={styles.page}>
-      <div className={styles.postComposer}>
-        <PostComposer />
+    <StoreProvider>
+      <div className={styles.page}>
+        <HomeWithClientState posts={posts} users={users} />
       </div>
-      {/* TODO - Update error prop */}
-      <Feed posts={posts} users={users} error={null} />
-    </div>
+    </StoreProvider>
   );
 }
