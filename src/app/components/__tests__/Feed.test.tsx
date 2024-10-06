@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import Feed from "../Feed";
-import { Post } from "@/types";
+import { Post, User } from "@/types";
 import { expectDefined } from "../../../tsHelpers";
 
 describe("Feed", () => {
@@ -9,7 +9,7 @@ describe("Feed", () => {
     {
       content: "Test post 1",
       created_time: 1728033422000,
-      author: { name: "testUser1", id: "1", profile_photo_url: "testUrl" },
+      author: { name: "Matt", id: "1", profile_photo_url: "testUrl" },
       id: "1",
       reactions: { like: 1 },
       image_url: "testUrl",
@@ -17,42 +17,47 @@ describe("Feed", () => {
     {
       content: "Test post 2",
       created_time: 1728033423000,
-      author: { name: "testUser2", id: "2", profile_photo_url: "testUrl" },
+      author: { name: "Jon", id: "2", profile_photo_url: "testUrl" },
       id: "2",
       reactions: { like: 2 },
       image_url: "testUrl",
     },
+  ];
+  const users: Required<User>[] = [
     {
-      content: "Test post 3",
-      created_time: 1728033424000,
-      author: { name: "testUser3", id: "3", profile_photo_url: "testUrl" },
-      id: "3",
-      reactions: { like: 3 },
-      image_url: "testUrl",
+      id: "1",
+      name: "Matt",
+      profile_photo_url: "https://example.com/matt-profile.jpg",
+    },
+    {
+      id: "2",
+      name: "Jon",
+      profile_photo_url: "https://example.com/jon-profile.jpg",
     },
   ];
   it(`renders a list of ${posts.length} posts`, () => {
-    render(<Feed posts={posts} />);
+    render(<Feed posts={posts} users={users} error={null} />);
     const postElements = screen.getAllByText(/Test post/);
     expect(postElements).toHaveLength(posts.length);
   });
 
   it("renders the content of each post", () => {
-    render(<Feed posts={posts} />);
+    render(<Feed posts={posts} users={users} error={null} />);
     posts.forEach((post) => {
       const content = expectDefined(post.content, "Post content is undefined");
       expect(screen.getByText(content)).toBeInTheDocument();
     });
   });
   it("renders the user of each post", () => {
-    render(<Feed posts={posts} />);
+    render(<Feed posts={posts} users={users} error={null} />);
+    screen.debug();
     posts.forEach((post) => {
       const user = expectDefined(post.author?.name, "Post author is undefined");
       expect(screen.getByText(user)).toBeInTheDocument();
     });
   });
   it("renders the timestamp of each post", () => {
-    render(<Feed posts={posts} />);
+    render(<Feed posts={posts} users={users} error={null} />);
     posts.forEach((post) => {
       const createdTime = expectDefined(
         post.created_time,
