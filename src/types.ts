@@ -15,6 +15,10 @@ export type Post = {
   image_url?: Maybe<string>;
 };
 
+export type NormalizedPost = Omit<Post, "author"> & {
+  authorId?: Maybe<string>;
+};
+
 export type Feed = {
   posts?: Maybe<Post[]>;
   pagination?: {

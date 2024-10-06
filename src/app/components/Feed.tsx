@@ -1,22 +1,25 @@
 import React from "react";
-import { Post as PostType } from "@/types";
+import { NormalizedPost, User } from "@/types";
 import Post from "./Post";
 import ErrorFallback from "./ErrorFallback";
 
 interface FeedProps {
   error: string | null;
-  posts: PostType[];
+  posts: NormalizedPost[];
+  users: User[];
 }
 
-export default function Feed({ error, posts }: FeedProps) {
+export default function Feed({ error, posts, users }: FeedProps) {
   if (error) {
     return <ErrorFallback message={error} />;
   }
+
   return (
     <div className="feed">
-      {posts.map((post, index) => (
-        <Post key={index} post={post} />
-      ))}
+      {posts.map((post, index) => {
+        const user = users.find((user) => user.id === post.authorId);
+        return <Post key={index} post={post} user={user} />;
+      })}
     </div>
   );
 }

@@ -4,12 +4,12 @@ import { NextResponse } from "next/server";
 // Example users data
 const users: Required<User>[] = [
   {
-    id: "user1",
+    id: "1",
     name: "Matt",
     profile_photo_url: "https://example.com/matt-profile.jpg",
   },
   {
-    id: "user2",
+    id: "2",
     name: "Jon",
     profile_photo_url: "https://example.com/jon-profile.jpg",
   },
