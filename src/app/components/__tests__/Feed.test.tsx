@@ -3,7 +3,11 @@ import { render, screen } from "@testing-library/react";
 import Feed from "../Feed";
 import { Post, User } from "@/types";
 import { expectDefined } from "../../../tsHelpers";
+import { StoreProvider } from "../../store/storeContext";
+import { HomeWithClientState } from "../../HomeWithClientState";
 
+// These tests have become a bit roundabout because of where we hydrate the client - in HomeWithClientState
+// Therefore to keep things easier I'm just rendering that component as this means the store will get hydrated
 describe("Feed", () => {
   const posts: Required<Post>[] = [
     {
@@ -36,28 +40,45 @@ describe("Feed", () => {
     },
   ];
   it(`renders a list of ${posts.length} posts`, () => {
-    render(<Feed posts={posts} users={users} error={null} />);
+    render(
+      <StoreProvider>
+        <HomeWithClientState posts={posts} users={users} />
+      </StoreProvider>
+    );
+
     const postElements = screen.getAllByText(/Test post/);
     expect(postElements).toHaveLength(posts.length);
   });
 
   it("renders the content of each post", () => {
-    render(<Feed posts={posts} users={users} error={null} />);
+    render(
+      <StoreProvider>
+        <HomeWithClientState posts={posts} users={users} />
+      </StoreProvider>
+    );
     posts.forEach((post) => {
       const content = expectDefined(post.content, "Post content is undefined");
       expect(screen.getByText(content)).toBeInTheDocument();
     });
   });
   it("renders the user of each post", () => {
-    render(<Feed posts={posts} users={users} error={null} />);
-    screen.debug();
+    render(
+      <StoreProvider>
+        <HomeWithClientState posts={posts} users={users} />
+      </StoreProvider>
+    );
+
     posts.forEach((post) => {
       const user = expectDefined(post.author?.name, "Post author is undefined");
       expect(screen.getByText(user)).toBeInTheDocument();
     });
   });
   it("renders the timestamp of each post", () => {
-    render(<Feed posts={posts} users={users} error={null} />);
+    render(
+      <StoreProvider>
+        <HomeWithClientState posts={posts} users={users} />
+      </StoreProvider>
+    );
     posts.forEach((post) => {
       const createdTime = expectDefined(
         post.created_time,
