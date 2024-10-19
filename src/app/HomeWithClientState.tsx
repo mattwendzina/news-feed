@@ -17,7 +17,8 @@ export const HomeWithClientState = ({
 }: HomeWithClientStateProps) => {
   const { dispatch } = useStore();
   const [loading, setLoading] = useState(false);
-  const [page, setPage] = useState(1);
+  // TODO - probably shouldn't be setting this to page 2
+  const [page, setPage] = useState(2);
   const loader = useRef(null);
 
   useEffect(() => {
@@ -29,7 +30,7 @@ export const HomeWithClientState = ({
   useEffect(() => {
     const fetchPosts = async () => {
       setLoading(true);
-      const res = await fetch(`/api/posts?page=${page}`);
+      const res = await fetch(`/api/posts?page=${page}&delay=1000`);
       const newPosts = await res.json();
       dispatch({ type: "SET_POSTS", payload: newPosts });
       setLoading(false);
@@ -39,19 +40,21 @@ export const HomeWithClientState = ({
   }, [page]);
 
   useEffect(() => {
+    const currentLoader = loader.current;
+
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting && !loading) {
         setPage((prevPage) => prevPage + 1);
       }
     });
 
-    if (loader.current) {
-      observer.observe(loader.current);
+    if (currentLoader) {
+      observer.observe(currentLoader);
     }
 
     return () => {
-      if (loader.current) {
-        observer.unobserve(loader.current);
+      if (currentLoader) {
+        observer.unobserve(currentLoader);
       }
     };
   }, [loading]);

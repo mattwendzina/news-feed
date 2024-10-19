@@ -22,10 +22,16 @@ const mockPosts: Post[] = Array.from({ length: 100 }, (_, i) => ({
 export async function GET(req: Request) {
   const url = new URL(req.url);
   const page = Number(url.searchParams.get("page")) || 1;
+  const delay = Number(url.searchParams.get("delay")) || 0;
   const pageSize = 20;
   const start = (page - 1) * pageSize;
 
-  const paginatedPosts = mockPosts.slice(start, start + pageSize);
+  const postsPromise = new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(mockPosts.slice(start, start + pageSize));
+    }, delay);
+  });
+  const paginatedPosts = await postsPromise;
 
   return NextResponse.json(paginatedPosts);
 }

@@ -16,13 +16,14 @@ const Feed = forwardRef<HTMLDivElement, FeedProps>(
     const { state } = useStore();
 
     const [isHydrated, setIsHydrated] = useState<boolean>(false);
-    if (error) {
-      return <ErrorFallback message={error} />;
-    }
 
     useEffect(() => {
       setIsHydrated(true);
     }, []);
+
+    if (error) {
+      return <ErrorFallback message={error} />;
+    }
 
     const postsToRender = isHydrated ? Object.values(state.posts) : posts;
 
@@ -42,5 +43,7 @@ const Feed = forwardRef<HTMLDivElement, FeedProps>(
     );
   }
 );
+
+Feed.displayName = "Feed";
 
 export default Feed;
